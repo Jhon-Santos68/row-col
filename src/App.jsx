@@ -3,6 +3,9 @@ import * as XLSX from 'xlsx';
 import dataWrite from './assets/newJson.json';
 import dataRide from './assets/nimadir.json';
 
+export let dataObj = []
+
+
 function App() {
   const [items, setItems] = useState(initialState);
 
@@ -34,9 +37,34 @@ function App() {
     promise.then((res) => setItems(res))
   }
 
-  let dataObj = []
 
   useEffect(() => {
+    if (items) {
+      items.map(item => {
+        if (!dataObj.some(e => e["soato"] == item["СОАТО"])) {
+          dataObj.push({
+            nomi: item["аҳоли пункти"],
+            soato: item["СОАТО"],
+            mahallalar: [{
+              nomi: item["маҳалла қисқа"],
+              soato: item["fifteen"],
+            }]
+          })
+        } else {
+          dataObj[dataObj.findIndex(t => t?.soato == item["СОАТО"])]?.mahallalar.push({
+            nomi: item["маҳалла қисқа"],
+            soato: item["fifteen"],
+          })
+        }
+      })
+    }
+
+
+    console.log(JSON.stringify(dataObj))
+    // document.write(JSON.stringify(dataObj))
+  }, [items])
+
+ /*  useEffect(() => {
     if (items) {
       items.map(item => {
         dataRide.forEach(region => {
@@ -69,6 +97,7 @@ function App() {
     console.log(dataObj)
     // document.write(JSON.stringify(dataObj))
   }, [items])
+ */
 
 
   return (
