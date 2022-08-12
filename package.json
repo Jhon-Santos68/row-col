@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@rowsncolumns/grid": "^8.0.8",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.1",
+    "write-file-p": "^1.0.8",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

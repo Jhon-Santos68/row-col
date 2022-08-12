@@ -1,5 +1,7 @@
-import { useState, initialState } from 'react'
+import { useState, initialState, useEffect } from 'react'
 import * as XLSX from 'xlsx';
+import dataWrite from './assets/newJson.json';
+import dataRide from './assets/nimadir.json';
 
 function App() {
   const [items, setItems] = useState(initialState);
@@ -8,8 +10,6 @@ function App() {
 
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      console.log(fileReader);
-
       fileReader.readAsArrayBuffer(file);
 
       fileReader.onload = (e) => {
@@ -34,6 +34,43 @@ function App() {
     promise.then((res) => setItems(res))
   }
 
+  let dataObj = []
+
+  useEffect(() => {
+    if (items) {
+      items.map(item => {
+        dataRide.forEach(region => {
+          region["tumanlar"].map(tuman => {
+            if (tuman["soato"] == item["soato"]) {
+
+
+              if (!dataObj.some(e => e["soato"] == item["soato"])) {
+                dataObj.push({
+                  nomi: tuman["nomi"],
+                  soato: tuman["soato"],
+                  mahallalar: [{
+                    nomi: item["mahalla_nomi"],
+                    soato: item["mahalla_soato"],
+                  }]
+                })
+              } else {
+                dataObj[dataObj.findIndex(t => t?.soato == tuman["soato"])]?.mahallalar.push({
+                  nomi: item["mahalla_nomi"],
+                  soato: item["mahalla_soato"],
+                })
+              }
+            }
+          })
+        });
+      })
+    }
+
+
+    console.log(dataObj)
+    // document.write(JSON.stringify(dataObj))
+  }, [items])
+
+
   return (
     <div>
       <input type="file" onChange={(e) => {
@@ -41,18 +78,23 @@ function App() {
         readExcel(file);
       }} />
 
-      <table class="table" border="1" style={{borderCollapse: 'collapse'}}>
+      <table class="table" border="1" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th scope="col">Item</th>
-            <th scope="col">Description</th>
+            {items && Object.keys(items[0]).map((elem) => (
+              <th scope="col">{elem}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {items && items.map((elem) => (
-            <tr key={elem['Полное наименование']}>
-              <th>{elem['Полное наименование']}</th>
-              <td><input type="text" value={elem['Дата рождения']} /></td>
+            <tr>
+              {Object.keys(elem).map(keyObj => (
+                <td>{elem[keyObj]}</td>
+              ))}
+              {/* <td>{elem?.shipName}</td>
+              <td><input type="text" value={elem?.freight} /></td> */
+              }
             </tr>
           ))}
         </tbody>
