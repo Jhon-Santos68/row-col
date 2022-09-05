@@ -1,10 +1,10 @@
 import { useState, initialState, useEffect } from 'react'
 import * as XLSX from 'xlsx';
-import dataWrite from './assets/newJson.json';
-import dataRide from './assets/nimadir.json';
+// import dataWrite from './assets/newJson.json';
+import dataRide from './assets/qap.json';
+
 
 export let dataObj = []
-
 
 function App() {
   const [items, setItems] = useState(initialState);
@@ -38,22 +38,32 @@ function App() {
   }
 
 
+  // 1722203
+
+
   useEffect(() => {
     if (items) {
       items.map(item => {
+        // dataObj.push({
+        //   nomi: item["Номи"],
+        //   soato: String(item["Soato"]),
+        //   mahallalar: []
+        // })
+
+
         if (!dataObj.some(e => e["soato"] == item["СОАТО"])) {
           dataObj.push({
             nomi: item["аҳоли пункти"],
-            soato: item["СОАТО"],
+            soato: String(item["СОАТО"]),
             mahallalar: [{
               nomi: item["маҳалла қисқа"],
-              soato: item["fifteen"],
+              soato: String(item["Fifteen"]),
             }]
           })
         } else {
           dataObj[dataObj.findIndex(t => t?.soato == item["СОАТО"])]?.mahallalar.push({
             nomi: item["маҳалла қисқа"],
-            soato: item["fifteen"],
+            soato: String(item["Fifteen"]),
           })
         }
       })
@@ -64,41 +74,59 @@ function App() {
     // document.write(JSON.stringify(dataObj))
   }, [items])
 
- /*  useEffect(() => {
-    if (items) {
-      items.map(item => {
-        dataRide.forEach(region => {
-          region["tumanlar"].map(tuman => {
-            if (tuman["soato"] == item["soato"]) {
+  // useEffect(() => {
+  //   if (items) {
+  //     dataRide.forEach(region => {
+  //       items.map(item => {
+
+  //         if (region["soato"] == item["tuman"]) {
+  //           if (!dataObj.some(e => e?.soato == item["tuman"])) {
+  //             dataObj.push({
+  //               nomi: region.nomi,
+  //               soato: String(region?.soato),
+  //               mahallalar: [
+  //                 {
+  //                   nomi: item["аҳоли пункти"],
+  //                   soato: String(item["СОАТО"])
+  //                 }
+  //               ]
+  //             })
+  //           } else {
+  //             dataObj[dataObj.findIndex(t => t?.soato == item["tuman"])]?.mahallalar.push({
+  //               nomi: item["аҳоли пункти"],
+  //               soato: String(item["СОАТО"])
+  //             })
+  //           }
+  //         }
+
+  //         //  region["tumanlar"].map(tuman => {
+  //         //    if (tuman["soato"] == item["soato"]) {
+  //         //      if (!dataObj.some(e => e["soato"] == item["soato"])) {
+  //         //        dataObj.push({
+  //         //          nomi: tuman["nomi"],
+  //         //          soato: tuman["soato"],
+  //         //          mahallalar: [{
+  //         //            nomi: item["mahalla_nomi"],
+  //         //            soato: item["mahalla_soato"],
+  //         //          }]
+  //         //        })
+  //         //      } else {
+  //         //        dataObj[dataObj.findIndex(t => t?.soato == tuman["soato"])]?.mahallalar.push({
+  //         //          nomi: item["mahalla_nomi"],
+  //         //          soato: item["mahalla_soato"],
+  //         //        })
+  //         //      }
+  //         //    }
+  //         //  })
 
 
-              if (!dataObj.some(e => e["soato"] == item["soato"])) {
-                dataObj.push({
-                  nomi: tuman["nomi"],
-                  soato: tuman["soato"],
-                  mahallalar: [{
-                    nomi: item["mahalla_nomi"],
-                    soato: item["mahalla_soato"],
-                  }]
-                })
-              } else {
-                dataObj[dataObj.findIndex(t => t?.soato == tuman["soato"])]?.mahallalar.push({
-                  nomi: item["mahalla_nomi"],
-                  soato: item["mahalla_soato"],
-                })
-              }
-            }
-          })
-        });
-      })
-    }
+  //       });
+  //     })
+  //   }
 
-
-    console.log(dataObj)
-    // document.write(JSON.stringify(dataObj))
-  }, [items])
- */
-
+  //   console.log(JSON.stringify(dataObj))
+  //   // document.write(JSON.stringify(dataObj))
+  // }, [items])
 
   return (
     <div>
@@ -107,7 +135,9 @@ function App() {
         readExcel(file);
       }} />
 
-      <table class="table" border="1" style={{ borderCollapse: 'collapse' }}>
+      {items && document.write(JSON.stringify(dataObj))}
+
+      {/* <table class="table" border="1" style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
             {items && Object.keys(items[0]).map((elem) => (
@@ -121,13 +151,10 @@ function App() {
               {Object.keys(elem).map(keyObj => (
                 <td>{elem[keyObj]}</td>
               ))}
-              {/* <td>{elem?.shipName}</td>
-              <td><input type="text" value={elem?.freight} /></td> */
-              }
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   )
 }
